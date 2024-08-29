@@ -1,0 +1,47 @@
+package com.chamith.ors.service;
+
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.chamith.ors.dto.UserDTO;
+import com.chamith.ors.entity.User;
+import com.chamith.ors.entity.UserType;
+import com.chamith.ors.repo.UserRepository;
+
+public class UserServiceImpl implements UserService {
+    @Autowired
+    private final UserRepository userRepository;
+
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    @Override
+    public boolean register(UserDTO userDTO) {
+        Optional<User> userByMobile = userRepository.findByMobile(userDTO.getMobile());
+
+        if(userByMobile.isPresent()) {
+            return false;
+        }
+
+        User user = new User();
+        user.setFirstName(userDTO.getFirstName());
+        user.setLastName(userDTO.getLastName());
+        user.setMobile(userDTO.getMobile());
+        user.setPassword(userDTO.getPassword());
+        user.setUserType(UserType.valueOf(userDTO.getUserType()));
+
+        return userRepository.save(user) != null;
+    }
+
+    @Override
+    public User login(String mobile, String password) {
+        Optional<User> userByCredentials = userRepository.findByMobileAndPassword(mobile, password);
+
+        if(userByCredentials.isPresent()) {
+            return userByCredentials.get();
+        }
+        return null;
+    }
+}
