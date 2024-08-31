@@ -6,6 +6,7 @@ public class FoodDTO {
     private double price;
     private String imagePath;
     private int availability;
+    private int categoryId;
 
     public int getId() {
         return id;
@@ -45,5 +46,13 @@ public class FoodDTO {
 
     public void setAvailability(int availability) {
         this.availability = availability;
+    }
+
+    public int getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
     }
 }
