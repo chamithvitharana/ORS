@@ -3,12 +3,14 @@ package com.chamith.ors.service;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.chamith.ors.dto.UserDTO;
 import com.chamith.ors.entity.User;
 import com.chamith.ors.entity.UserType;
 import com.chamith.ors.repo.UserRepository;
 
+@Service
 public class UserServiceImpl implements UserService {
     @Autowired
     private final UserRepository userRepository;
