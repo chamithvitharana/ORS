@@ -23,15 +23,12 @@ public class OrderService {
     private final FoodRepository foodRepository;
     @Autowired
     private final OrderItemRepository orderItemRepository;
-    @Autowired
-    private final IdGenerator idGenerator;
 
-    public OrderService(OrderRepository orderRepository, UserRepository userRepository, FoodRepository foodRepository, OrderItemRepository orderItemRepository, IdGenerator idGenerator) {
+    public OrderService(OrderRepository orderRepository, UserRepository userRepository, FoodRepository foodRepository, OrderItemRepository orderItemRepository) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.foodRepository = foodRepository;
         this.orderItemRepository = orderItemRepository;
-        this.idGenerator = idGenerator;
     }
 
     public Order addOrder(OrderDTO orderDTO) {
@@ -41,7 +38,7 @@ public class OrderService {
             PaymentMethod paymentMethod = PaymentMethod.valueOf(orderDTO.getPaymentMethod());
 
             Order order = new Order();
-            order.setInvoiceId(idGenerator.getId());
+            order.setInvoiceId(IdGenerator.getId());
             order.setDateTime(LocalDateTime.now());
             order.setStatus(Status.IN_QUEUE);
             order.setPaymentMethod(paymentMethod);

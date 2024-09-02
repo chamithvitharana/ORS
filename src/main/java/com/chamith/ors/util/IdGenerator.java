@@ -2,21 +2,13 @@ package com.chamith.ors.util;
 
 import java.security.SecureRandom;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 public class IdGenerator {
     private static final int LOWER_BOUND = 11111;
     private static final int UPPER_BOUND = 99999;
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
-    @Autowired
-    private final SecureRandom secureRandom;
-
-    public IdGenerator(SecureRandom secureRandom) {
-        this.secureRandom = secureRandom;
-    }
-
-    public String getId() {
-        int nextInt = secureRandom.nextInt(LOWER_BOUND, UPPER_BOUND);
+    public static String getId() {
+        int nextInt = SECURE_RANDOM.nextInt(LOWER_BOUND, UPPER_BOUND);
         return String.valueOf(nextInt);
     }
 }
