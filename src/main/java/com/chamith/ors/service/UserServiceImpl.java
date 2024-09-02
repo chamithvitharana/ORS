@@ -6,17 +6,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.chamith.ors.dto.UserDTO;
+import com.chamith.ors.entity.Address;
 import com.chamith.ors.entity.User;
 import com.chamith.ors.entity.UserType;
+import com.chamith.ors.repo.AddressRepository;
 import com.chamith.ors.repo.UserRepository;
 
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
     private final UserRepository userRepository;
+    @Autowired
+    private final AddressRepository addressRepository;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, AddressRepository addressRepository) {
         this.userRepository = userRepository;
+        this.addressRepository = addressRepository;
     }
 
     @Override
@@ -45,5 +50,23 @@ public class UserServiceImpl implements UserService {
             return userByCredentials.get();
         }
         return null;
+    }
+
+    @Override
+    public boolean updateAddress(User user, String line1, String line2) {
+        Optional<Address> addressByUser = addressRepository.findByUser(user);
+
+        Address address;
+
+        if(addressByUser.isPresent()) { // Get existing Address object
+            address = addressByUser.get();
+        } else { // Create new Address object
+            address = new Address();
+            address.setUser(user);
+        }
+        address.setLine1(line1);
+        address.setLine2(line2);
+
+        return addressRepository.save(address) != null;
     }
 }
