@@ -3,16 +3,16 @@ package com.chamith.ors.dto;
 import java.util.List;
 
 public class OrderDTO {
-    private int customerId;
+    private long customerId;
     private String orderType;
     private String paymentMethod;
     private List<FoodItemDTO> foodItems;
 
-    public int getCustomerId() {
+    public long getCustomerId() {
         return customerId;
     }
 
-    public void setCustomerId(int customerId) {
+    public void setCustomerId(long customerId) {
         this.customerId = customerId;
     }
 
