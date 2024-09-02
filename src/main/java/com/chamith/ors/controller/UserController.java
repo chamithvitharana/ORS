@@ -48,4 +48,19 @@ public class UserController {
             return ResponseEntity.badRequest().body("User does not exists! Please register first.");
         }
     }
+
+    @PostMapping("/update/address")
+    public ResponseEntity<String> updateAddress(@RequestParam("line1") String line1,
+                                                @RequestParam("line2") String line2,
+                                                HttpServletRequest request) {
+        User user = (User) request.getSession().getAttribute("loggedInUser");
+
+        boolean isUpdated = userService.updateAddress(user, line1, line2);
+
+        if(isUpdated) {
+            return ResponseEntity.ok("Your address updated successfully!");
+        } else {
+            return ResponseEntity.badRequest().body("Something went wrong! Plese try again later.");
+        }
+    }
 }
