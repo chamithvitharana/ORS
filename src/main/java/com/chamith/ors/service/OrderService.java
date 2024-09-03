@@ -1,6 +1,7 @@
 package com.chamith.ors.service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -69,5 +70,24 @@ public class OrderService {
         } catch (Exception ex) {
             return false;
         }
+    }
+
+    public boolean updateStatus(long orderId, String newStatus) {
+        Optional<Order> orderById = orderRepository.findById(orderId);
+
+        if(orderById.isEmpty()) {
+            return false;
+        }
+
+        Order order = orderById.get();
+
+        try {
+            order.setStatus(Status.valueOf(newStatus));
+            orderRepository.save(order);
+            return true;
+        } catch (IllegalArgumentException ignored) {
+
+        }
+        return false;
     }
 }
