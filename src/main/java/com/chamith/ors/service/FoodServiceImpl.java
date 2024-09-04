@@ -93,6 +93,19 @@ public class FoodServiceImpl implements FoodService {
         return foodRepository.save(foodItem) != null;
     }
 
+    @Override
+    public boolean addFoodCategory(String name) {
+        Optional<FoodCategory> categoryByName = foodCategoryRepository.findByName(name);
+
+        if(categoryByName.isPresent()) {
+            return false;
+        }
+        FoodCategory foodCategory = new FoodCategory();
+        foodCategory.setName(name);
+        foodCategoryRepository.save(foodCategory);
+        return true;
+    }
+
     private FoodCategory findFoodCategory(long id) {
         return foodCategoryRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Category not found for given id: " + id));

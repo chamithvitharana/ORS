@@ -10,4 +10,5 @@ public interface FoodService {
     FoodItem getFoodItem(long id);
     boolean addFoodItem(FoodDTO foodDTO);
     boolean updateFoodItem(long foodId, int availability);
+    boolean addFoodCategory(String name);
 }
