@@ -1,6 +1,8 @@
 package com.chamith.ors.service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,8 +34,23 @@ public class FoodServiceImpl implements FoodService {
     }
 
     @Override
-    public List<FoodItem> getAllFoodItems() {
-        return null;
+    public List<FoodDTO> getAllFoodItems(boolean isActive) {
+        List<FoodDTO> foodDTOList = new ArrayList<>();
+
+        for(FoodItem food : foodRepository.findAll()) {
+            if(isActive && food.getStatus() == FoodStatus.NOT_AVAILABLE) {
+                continue;
+            }
+            FoodDTO foodDTO = new FoodDTO();
+            foodDTO.setId(food.getId());
+            foodDTO.setName(food.getName());
+            foodDTO.setPrice(food.getPrice());
+            foodDTO.setAvailability(food.getStatus().ordinal());
+            foodDTO.setImagePath(food.getImage().getPath());
+
+            foodDTOList.add(foodDTO);
+        }
+        return foodDTOList;
     }
 
     @Override
@@ -60,6 +77,20 @@ public class FoodServiceImpl implements FoodService {
 
         }
         return false;
+    }
+
+    @Override
+    public boolean updateFoodItem(long foodId, int availability) {
+        Optional<FoodItem> foodItemById = foodRepository.findById(foodId);
+
+        if(foodItemById.isEmpty()) {
+            return false;
+        }
+
+        FoodItem foodItem = foodItemById.get();
+        foodItem.setStatus(FoodStatus.valueOf(availability));
+
+        return foodRepository.save(foodItem) != null;
     }
 
     private FoodCategory findFoodCategory(long id) {
