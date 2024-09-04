@@ -1,10 +1,10 @@
 package com.chamith.ors.entity;
 
 public enum FoodStatus {
-    AVAILABLE, NOT_AVAILABLE;
+    NOT_AVAILABLE, AVAILABLE;
 
     public static FoodStatus valueOf(int id) throws IllegalArgumentException {
-        if(id<1 || id>2) {
+        if(id<0 || id>1) {
             throw new IllegalArgumentException("Illegal argument has been passed: " + id);
         }
 
