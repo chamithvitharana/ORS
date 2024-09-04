@@ -47,4 +47,15 @@ public class FoodItemController {
         }
         return response;
     }
+
+    @GetMapping("/add/category")
+    public ResponseEntity<String> addNewCategory(@RequestParam("category") String category) {
+        boolean isSuccess = foodService.addFoodCategory(category);
+
+        if(isSuccess) {
+            return ResponseEntity.ok("Food category added successfully!");
+        } else {
+            return ResponseEntity.badRequest().body("This category already added!");
+        }
+    }
 }
