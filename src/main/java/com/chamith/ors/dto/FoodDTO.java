@@ -1,18 +1,18 @@
 package com.chamith.ors.dto;
 
 public class FoodDTO {
-    private int id;
+    private long id;
     private String name;
     private double price;
     private String imagePath;
     private int availability;
     private int categoryId;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
