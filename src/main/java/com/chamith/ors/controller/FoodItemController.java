@@ -1,11 +1,10 @@
 package com.chamith.ors.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.chamith.ors.dto.FoodDTO;
 import com.chamith.ors.service.FoodService;
@@ -29,5 +28,23 @@ public class FoodItemController {
         } else {
             return ResponseEntity.badRequest().body("Something went wrong! Please try again later.");
         }
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<FoodDTO>> fetchAll(@RequestParam("isActive") boolean isActive) {
+        return ResponseEntity.ok().body(foodService.getAllFoodItems(isActive));
+    }
+
+    @GetMapping("/update")
+    public ResponseEntity<String> updateStatus(@RequestParam("fid") int foodId, @RequestParam("availability") int availability) {
+        ResponseEntity<String> response;
+        boolean isSuccess = foodService.updateFoodItem(foodId, availability);
+
+        if(isSuccess) {
+            response = ResponseEntity.ok("Status updated successfully!");
+        } else {
+            response = ResponseEntity.badRequest().body("Something went wrong! Please try again later.");
+        }
+        return response;
     }
 }
