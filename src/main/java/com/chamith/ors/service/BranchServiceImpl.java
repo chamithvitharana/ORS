@@ -22,7 +22,7 @@ public class BranchServiceImpl implements BranchService {
 
     @Override
     public boolean addBranch(String name) {
-        Optional<String> branchByName = branchRepository.findByName(name);
+        Optional<Branch> branchByName = branchRepository.findByName(name);
 
         if(branchByName.isPresent()) {
             return false;
