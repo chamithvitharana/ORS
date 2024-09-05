@@ -131,13 +131,64 @@
                 <label for="confirm-password">Confirm Password</label>
                 <input type="password" id="confirm-password" contenteditable="true" placeholder="Confirm your password"/>
             </div>
-            <button type="button" class="btn">Register</button>
+            <button type="button" class="btn" id="registerButton">Register</button>
             <div class="link">
                 <p>Already have an account? <a href="login.jsp">Login here</a></p>
             </div>
         </div>
     </div>
 
+    <script>
+        document.getElementById("registerButton").addEventListener('click', function () {
+            var firstName = document.getElementById("firstName");
+            var lastName = document.getElementById("lastName");
+            var mobile = document.getElementById("mobile");
+            var password = document.getElementById("password");
+            var cpassword = document.getElementById("confirm-password");
+
+            if(firstName.value==="") {
+                alert("Please enter your first name");
+                return;
+            } else if(lastName.value==="") {
+                alert("Please enter your last name.");
+                return;
+            } else if(mobile.value==="" || mobile.value.length!==10) {
+                alert("Please enter a valid mobile number.");
+                return;
+            } else if(password.value.length < 6 || password.value.length > 20) {
+                alert("Password must be within 6-20 characters.");
+                return;
+            } else if(password.value!==cpassword.value) {
+                alert("Password does not match with confirm password");
+                return;
+            }
+
+            var form = JSON.stringify({
+                "firstName": firstName.value,
+                "lastName": lastName.value,
+                "mobile": mobile.value,
+                "password": password.value,
+                "userType": "CUSTOMER"
+            });
+
+            var ajax = new XMLHttpRequest();
+
+            ajax.onreadystatechange = function () {
+                if(ajax.readyState === 4) {
+                    if(ajax.status===200) {
+                        alert("User registered successfully!");
+
+                        window.location = "login.jsp";
+                    } else {
+                        alert(ajax.responseText);
+                    }
+                }
+            };
+            ajax.open("POST", "/user/register", true);
+            ajax.setRequestHeader("Content-Type", "application/json");
+            ajax.send(form);
+        });
+    </script>
     <script src="js/script.js"></script>
 </body>
 </html>
