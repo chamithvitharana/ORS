@@ -1,5 +1,7 @@
 package com.chamith.ors.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,5 +70,34 @@ public class UserServiceImpl implements UserService {
         address.setLine2(line2);
 
         return addressRepository.save(address) != null;
+    }
+
+    @Override
+    public List<UserDTO> findAllUsers() {
+        List<UserDTO> userDTOList = new ArrayList<>();
+
+        for(User user : userRepository.findAll()) {
+            UserDTO userDTO = new UserDTO();
+            userDTO.setFirstName(user.getFirstName());
+            userDTO.setLastName(user.getLastName());
+            userDTO.setMobile(user.getMobile());
+            userDTO.setPassword(user.getPassword());
+            userDTO.setUserType(user.getUserType().name());
+
+            userDTOList.add(userDTO);
+        }
+
+        return userDTOList;
+    }
+
+    @Override
+    public boolean deleteUser(String mobile) {
+        Optional<User> userByMobile = userRepository.findByMobile(mobile);
+
+        if(userByMobile.isEmpty()) {
+            return false;
+        }
+        userRepository.delete(userByMobile.get());
+        return true;
     }
 }
