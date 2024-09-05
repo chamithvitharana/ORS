@@ -1,5 +1,7 @@
 package com.chamith.ors.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,6 +61,22 @@ public class UserController {
 
         if(isUpdated) {
             return ResponseEntity.ok("Your address updated successfully!");
+        } else {
+            return ResponseEntity.badRequest().body("Something went wrong! Plese try again later.");
+        }
+    }
+
+    @GetMapping("/get")
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
+        return ResponseEntity.ok().body(userService.findAllUsers());
+    }
+
+    @GetMapping("/delete")
+    public ResponseEntity<String> deleteUser(@RequestParam("mobile") String mobile) {
+        boolean isUserDeleted = userService.deleteUser(mobile);
+
+        if(isUserDeleted) {
+            return ResponseEntity.ok("User deleted successfully!");
         } else {
             return ResponseEntity.badRequest().body("Something went wrong! Plese try again later.");
         }
