@@ -158,6 +158,17 @@
     }
 </style>
 
+<!-- JSMail  -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script type="text/javascript">
+    (function() {
+        // change this public key
+        emailjs.init({
+            publicKey: "SXXvWGNto-clac9CW",
+        });
+    })();
+</script>
+
 <body>
     <!-- header -->
     <header>
@@ -547,6 +558,104 @@
     </footer>
     <!-- Footer End -->
 
+    <script>
+        //    email function
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('contact-form');
+            const responseDiv = document.getElementById('form-response');
+
+            form.addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent the default form submission
+
+                // Get form data
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const subject = document.getElementById('subject').value;
+                const message = document.getElementById('message').value;
+
+                // Use EmailJS to send email   // change this serviceID and template ID
+                emailjs.send('service_ifdwppd', 'template_tdsvtc4', {
+                    name: name,
+                    email: email,
+                    subject: subject,
+                    message: message
+                })
+                    .then((response) => {
+                        console.log('Success:', response);
+                        responseDiv.innerHTML = '<p>Thank you for your message! We will get back to you soon.!</p>';
+                        responseDiv.style.color = 'green';
+                        form.reset();
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                        responseDiv.innerHTML = '<p>There was a problem sending your message. Please try again later.</p>';
+                        responseDiv.style.color = 'red';
+                    });
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const stars = document.querySelectorAll('#rating-stars input');
+            const selectedRatingText = document.getElementById('selected-rating');
+
+            stars.forEach(star => {
+                star.addEventListener('change', (event) => {
+                    const rating = event.target.value;
+                    selectedRatingText.textContent = `Selected Rating: ${rating} ${'⭐'.repeat(rating)}`;
+                });
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load existing reviews from the database
+            loadReviews();
+        });
+
+        function submitReview(event) {
+            event.preventDefault();
+
+            const formData = new FormData(document.getElementById('review-form'));
+
+            fetch('', {
+                method: 'POST',
+                body: formData,
+            })
+                .then(response => response.text())
+                .then(data => {
+                    alert('Review submitted successfully!');
+                    document.getElementById('review-form').reset();
+                    loadReviews(); // Reload reviews after submission
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        function loadReviews() {
+            fetch('')
+                .then(response => response.json())
+                .then(data => {
+                    const reviewList = document.querySelector('.review-list');
+                    reviewList.innerHTML = '';
+                    data.forEach(review => {
+                        const li = document.createElement('li');
+                        li.className = 'review-item';
+                        li.innerHTML = `
+                                <div class="review-header">
+                                    <span class="reviewer-name">${review.name}</span>
+                                    <span class="review-date">${review.date}</span>
+                                    <span class="review-rating">${'★'.repeat(review.rating)}</span>
+                                </div>
+                                <p class="review-content">${review.content}</p>
+                            `;
+                        reviewList.appendChild(li);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    </script>
     <script src="js/script.js"></script>
 </body>
 </html>
