@@ -8,7 +8,7 @@ public class FoodDTO {
     private int availability;
     private int categoryId;
 
-    private int categoryName;
+    private String categoryName;
 
     public long getId() {
         return id;
@@ -58,11 +58,11 @@ public class FoodDTO {
         this.categoryId = categoryId;
     }
 
-    public int getCategoryName() {
+    public String getCategoryName() {
         return categoryName;
     }
 
-    public void setCategoryName(int categoryName) {
+    public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
     }
 }
