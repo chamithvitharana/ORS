@@ -1,4 +1,13 @@
+<%@ page import="com.chamith.ors.entity.User" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
+<%
+    User loggedUser = (User) session.getAttribute("loggedInUser");
+    if(loggedUser!=null) {
+        response.sendRedirect("index.jsp");
+    }
+%>
+
 <html>
 <head>
     <meta charset="UTF-8">
@@ -119,13 +128,44 @@
                 <input type="password" id="password" contenteditable="true" placeholder="Enter your password">
 
             </div>
-            <button type="button" class="btn">Login</button>
+            <button type="button" class="btn" id="loginButton">Login</button>
             <div class="link">
                 <p>Don't have an account? <a href="register.jsp">Register here</a></p>
             </div>
         </div>
     </div>
 
+    <script>
+        document.getElementById("loginButton").addEventListener('click', function () {
+            var mobile = document.getElementById("mobile");
+            var password = document.getElementById("password");
+
+            if(mobile.value==="") {
+                alert("Please enter your registeredmobile number.");
+                return;
+            } else if(password.value==="") {
+                alert("Password enter your password.");
+                return;
+            }
+
+            var ajax = new XMLHttpRequest();
+
+            ajax.onreadystatechange = function () {
+                if(ajax.readyState === 4) {
+                    if(ajax.status===200) {
+                        alert("User login is success!");
+
+                        window.location = "index.jsp";
+                    } else {
+                        alert(ajax.responseText);
+                    }
+                }
+            };
+            ajax.open("POST", "/user/login", true);
+            ajax.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            ajax.send("username=" + encodeURIComponent(mobile.value) + "&password=" + encodeURIComponent(password.value));
+        });
+    </script>
     <script src="js/script.js"></script>
 </body>
 </html>
