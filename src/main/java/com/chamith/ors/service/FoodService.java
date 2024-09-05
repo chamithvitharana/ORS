@@ -2,6 +2,7 @@ package com.chamith.ors.service;
 
 import java.util.List;
 
+import com.chamith.ors.dto.FoodCategoryDTO;
 import com.chamith.ors.dto.FoodDTO;
 import com.chamith.ors.entity.FoodItem;
 
@@ -11,4 +12,5 @@ public interface FoodService {
     boolean addFoodItem(FoodDTO foodDTO);
     boolean updateFoodItem(long foodId, int availability);
     boolean addFoodCategory(String name);
+    List<FoodCategoryDTO> getAllCategories();
 }

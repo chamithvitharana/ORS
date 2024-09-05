@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.chamith.ors.dto.FoodCategoryDTO;
 import com.chamith.ors.dto.FoodDTO;
 import com.chamith.ors.service.FoodService;
 
@@ -57,5 +58,10 @@ public class FoodItemController {
         } else {
             return ResponseEntity.badRequest().body("This category already added!");
         }
+    }
+
+    @GetMapping("/all/category")
+    public ResponseEntity<List<FoodCategoryDTO>> getAllCategories() {
+        return ResponseEntity.ok().body(foodService.getAllCategories());
     }
 }

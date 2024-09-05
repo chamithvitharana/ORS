@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.chamith.ors.dto.FoodCategoryDTO;
 import com.chamith.ors.dto.FoodDTO;
 import com.chamith.ors.entity.FoodCategory;
 import com.chamith.ors.entity.FoodItem;
@@ -104,6 +105,19 @@ public class FoodServiceImpl implements FoodService {
         foodCategory.setName(name);
         foodCategoryRepository.save(foodCategory);
         return true;
+    }
+
+    @Override
+    public List<FoodCategoryDTO> getAllCategories() {
+        List<FoodCategoryDTO> foodCategoryDTOList = new ArrayList<>();
+
+        for(FoodCategory foodCategory : foodCategoryRepository.findAll()) {
+            FoodCategoryDTO foodCategoryDTO = new FoodCategoryDTO();
+            foodCategoryDTO.setId(foodCategory.getId());
+            foodCategoryDTO.setName(foodCategory.getName());
+            foodCategoryDTOList.add(foodCategoryDTO);
+        }
+        return foodCategoryDTOList;
     }
 
     private FoodCategory findFoodCategory(long id) {
