@@ -1,11 +1,13 @@
 package com.chamith.ors.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.chamith.ors.dto.BranchDTO;
 import com.chamith.ors.entity.Branch;
 import com.chamith.ors.repo.BranchRepository;
 
@@ -32,7 +34,15 @@ public class BranchServiceImpl implements BranchService {
     }
 
     @Override
-    public List<Branch> findAllBranch() {
-        return branchRepository.findAll();
+    public List<BranchDTO> findAllBranch() {
+        List<BranchDTO> branchDTOList = new ArrayList<>();
+
+        for(Branch branch : branchRepository.findAll()) {
+            BranchDTO branchDTO = new BranchDTO();
+            branchDTO.setId(branch.getId());
+            branchDTO.setName(branch.getName());
+            branchDTOList.add(branchDTO);
+        }
+        return branchDTOList;
     }
 }
