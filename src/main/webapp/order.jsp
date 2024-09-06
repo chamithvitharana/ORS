@@ -418,11 +418,7 @@
         <div class="category-filter">
             <label for="category-filter" style="font-size: larger;">Search :: </label>
             <select id="category-filter" onchange="filterByCategory();">
-                <option value="0"> All Categories</option>
-                <option value="Breakfast">Breakfast</option>
-                <option value="Lunch">Lunch</option>
-                <option value="Dinner">Dinner</option>
-                <option value="Beverage">Beverage</option>
+                <option value="0">All Categories</option>
             </select>
         </div>
         <div class="menu-container" id="menu-container">
@@ -442,7 +438,7 @@
                 <h4 style="margin-bottom: 10px; margin-top: 10px;">Order Type</h4>
                 <div class="order-type">
                     <label><input type="radio" name="order-type" value="DELIVERY"> Delivery</label>
-                    <label><input type="radio" name="order-type" value="DINE_IN"> Dine In</label>
+                    <label><input type="radio" name="order-type" value="DINE_IN" checked> Dine In</label>
                     <label><input type="radio" name="order-type" value="TAKE_AWAY"> Take Away</label>
                 </div>
                 <h4>Delivery Details</h4>
@@ -454,7 +450,7 @@
                 </div>
                 <h4>Payment Method</h4>
                 <div class="payment-method">
-                    <label><input type="radio" name="payment-method" value="CARD"> Card</label>
+                    <label><input type="radio" name="payment-method" value="CARD" checked> Card</label>
                     <label><input type="radio" name="payment-method" value="CASH"> Cash on Delivery</label>
                 </div>
                 <button class="place-order-btn" id="place-order-btn">Place Order</button>
@@ -493,15 +489,65 @@
 
     <script>
         // Example menu items with categories
-        const menuItems = [
-            { id: 1, name: "Pancakes", price: 500, image: "images/dish1.jpg", category: "Breakfast" },
-            { id: 2, name: "Chicken Burger", price: 800, image: "images/dish2.jpg", category: "Lunch" },
-            { id: 3, name: "Grilled Salmon", price: 1200, image: "images/dish3.jpg", category: "Dinner" },
-            { id: 4, name: "Green Tea", price: 200, image: "images/dish1.jpg", category: "Beverage" }
-            // Add more items here
-        ];
+        const menuItems = [];
+        const categories = [];
         const cart = [];
         let cartTotal = 0;
+
+        function loadCategories() {
+            var ajax = new XMLHttpRequest();
+
+            ajax.onreadystatechange = function () {
+                if(ajax.readyState === 4) {
+                    if(ajax.status===200) {
+                        var categoryArray = JSON.parse(ajax.responseText);
+                        categories.length = 0;
+                        categoryArray.forEach((item) => {
+                            categories.push({ id: item.id, name: item.name });
+                        });
+                        renderCategories();
+                    }
+                }
+            };
+            ajax.open("GET", "/food/all/category", true);
+            ajax.send();
+        }
+
+        function renderCategories() {
+            const select = document.getElementById('category-filter');
+            select.innerHTML = '<option value="0" selected>All Categories<\/option>';
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category.name;
+                option.textContent = category.name;
+                select.appendChild(option);
+            });
+        }
+
+        function loadMenuItems() {
+            var ajax = new XMLHttpRequest();
+
+            ajax.onreadystatechange = function () {
+                if(ajax.readyState === 4) {
+                    if(ajax.status===200) {
+                        var foodArray = JSON.parse(ajax.responseText);
+                        menuItems.length = 0;
+                        foodArray.forEach((item) => {
+                            menuItems.push({
+                                id: item.id,
+                                name: item.name,
+                                price: item.price,
+                                image: 'images/foodItems/' + item.imagePath,
+                                category: item.categoryName
+                            });
+                        });
+                        renderMenuItems(menuItems);
+                    }
+                }
+            };
+            ajax.open("GET", "/food/all?isActive=" + encodeURIComponent(false), true);
+            ajax.send();
+        }
 
         function renderMenuItems(items) {
             const menuContainer = document.getElementById('menu-container');
@@ -564,16 +610,15 @@
             });
         }
 
-        function searchItems() {
-            const searchTerm = document.getElementById('search-input').value.toLowerCase();
-            const filteredItems = menuItems.filter(item => item.name.toLowerCase().includes(searchTerm));
-            renderMenuItems(filteredItems);
-        }
-
         function filterByCategory() {
             const selectedCategory = document.getElementById('category-filter').value;
-            const filteredItems = menuItems.filter(item => selectedCategory === '' || item.category === selectedCategory);
-            renderMenuItems(filteredItems);
+
+            if(selectedCategory==0) {
+                renderMenuItems(menuItems);
+            } else {
+                const filteredItems = menuItems.filter(item => selectedCategory === '' || item.category == selectedCategory);
+                renderMenuItems(filteredItems);
+            }
         }
 
         function changeQuantity(itemId, delta) {
@@ -657,6 +702,16 @@
             // Retrieve the values from the form
             var orderType = document.querySelector('input[name="order-type"]:checked')?.value || '';
             var paymentMethod = document.querySelector('input[name="payment-method"]:checked')?.value || '';
+            var line1 = document.getElementById("delivery-address-line1");
+            var line2 = document.getElementById("delivery-address-line2");
+
+            if(line1.value==="") {
+                alert("Please enter your address.");
+                return;
+            } else if(cart.length==0) {
+                alert("Please add foods to card");
+                return;
+            }
 
             // Generate food items array
             var foodItems = cart.map(item => ({
@@ -664,16 +719,45 @@
                 quantity: item.quantity
             }));
 
-            // Convert arrays to JSON strings for display
-            var foodItemsString = JSON.stringify(foodItems, null, 2);
+            // Save user address
+            var ajax = new XMLHttpRequest();
+            ajax.onreadystatechange = function () {
+                if(ajax.readyState === 4) {
+                    if(ajax.status!==200) {
+                        alert(ajax.responseText);
+                    }
+                }
+            };
+            ajax.open("POST", "/user/update/address", true);
+            ajax.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            ajax.send("line1=" + encodeURIComponent(line1.value) + "&line2=" + encodeURIComponent(line2.value));
 
-            // Display the information using alert
-            alert('Order Type: ' + orderType + '\n' +
-                'Payment Method: ' + paymentMethod + '\n' +
-                'Food Items: \n' + foodItemsString);
+            // Convert arrays to JSON strings for display
+            var foodItemsString = JSON.stringify({
+                "orderType": orderType,
+                "paymentMethod": paymentMethod,
+                "foodItems": foodItems
+            });
+
+            var ajax2 = new XMLHttpRequest();
+            ajax2.onreadystatechange = function () {
+                if(ajax2.readyState === 4) {
+                    if(ajax2.status===200) {
+                        alert("Order placed successfully!");
+                        cart.length = 0;
+                        cartTotal = 0;
+                    } else {
+                        alert(ajax2.responseText);
+                    }
+                }
+            };
+            ajax2.open("POST", "/order/add", true);
+            ajax2.setRequestHeader("Content-Type", "application/json");
+            ajax2.send(foodItemsString);
         });
 
-        renderMenuItems(menuItems);
+        loadCategories();
+        loadMenuItems();
     </script>
     <script src="js/script.js"></script>
 </body>
