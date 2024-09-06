@@ -3,6 +3,7 @@ package com.chamith.ors.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,7 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.chamith.ors.dto.OrderDTO;
 import com.chamith.ors.entity.Order;
+import com.chamith.ors.entity.User;
 import com.chamith.ors.service.OrderService;
+import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/order")
@@ -22,8 +25,15 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @GetMapping("/add")
-    public ResponseEntity<String> addNewOrder(@RequestBody OrderDTO orderDTO) {
+    @PostMapping("/add")
+    public ResponseEntity<String> addNewOrder(@RequestBody OrderDTO orderDTO, HttpServletRequest request) {
+
+        User user = (User) request.getSession().getAttribute("loggedInUser");
+
+        if(user == null) {
+            return ResponseEntity.badRequest().body("Something went wrong! Please try again later.");
+        }
+        orderDTO.setCustomerId(user.getId());
         Order order = orderService.addOrder(orderDTO);
 
         if(order != null) {
