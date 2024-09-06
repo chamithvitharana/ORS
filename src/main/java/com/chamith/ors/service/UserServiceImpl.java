@@ -13,6 +13,7 @@ import com.chamith.ors.entity.User;
 import com.chamith.ors.entity.UserType;
 import com.chamith.ors.repo.AddressRepository;
 import com.chamith.ors.repo.UserRepository;
+import jakarta.persistence.EntityManager;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -20,10 +21,13 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     @Autowired
     private final AddressRepository addressRepository;
+    @Autowired
+    private final EntityManager entityManager;
 
-    public UserServiceImpl(UserRepository userRepository, AddressRepository addressRepository) {
+    public UserServiceImpl(UserRepository userRepository, AddressRepository addressRepository, EntityManager entityManager) {
         this.userRepository = userRepository;
         this.addressRepository = addressRepository;
+        this.entityManager = entityManager;
     }
 
     @Override
@@ -56,7 +60,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean updateAddress(User user, String line1, String line2) {
-        Optional<Address> addressByUser = addressRepository.findByUser(user);
+        User managedUser = entityManager.find(User.class, user.getId());
+
+        if(managedUser==null) {
+            managedUser = entityManager.merge(user);
+        }
+
+        Optional<Address> addressByUser = addressRepository.findByUser(managedUser);
 
         Address address;
 
@@ -64,7 +74,7 @@ public class UserServiceImpl implements UserService {
             address = addressByUser.get();
         } else { // Create new Address object
             address = new Address();
-            address.setUser(user);
+            address.setUser(managedUser);
         }
         address.setLine1(line1);
         address.setLine2(line2);
