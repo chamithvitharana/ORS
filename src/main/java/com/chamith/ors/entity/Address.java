@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 @Entity
 public class Address {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @OneToOne
     @MapsId
@@ -15,14 +14,6 @@ public class Address {
     private String line1;
     @Column(nullable = false)
     private String line2;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public User getUser() {
         return user;
