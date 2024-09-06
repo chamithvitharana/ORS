@@ -275,96 +275,12 @@
                 </div>
 
                 <div class="menu-items">
-                    <div class="menu-item-left">
-                        <div class="menu-item">
-                            <img src="images/food1.png" alt="Kottu Roti">
-                            <div>
-                                <h3>Kottu Roti <span class=" primary-text span"> Rs. 650.00</span></h3>
-                                <p>Breakfast.</p>
-                            </div>
-                        </div>
-
-                        <div class="menu-item">
-                            <img src="images/food2.png" alt="Polos Curry">
-                            <div>
-                                <h3>Polos Curry <span class=" primary-text span"> Rs. 500.00</span></h3>
-                                <p>Breakfast</p>
-                            </div>
-                        </div>
-                        <div class="menu-item">
-                            <img src="images/food3.png" alt="Hoppers">
-                            <div>
-                                <h3>Hoppers <span class=" primary-text span"> Rs. 200.00</span></h3>
-                                <p>Dinner.</p>
-                            </div>
-                        </div>
-                        <div class="menu-item">
-                            <img src="images/food4.png" alt="Lamprais">
-                            <div>
-                                <h3>Lamprais <span class=" primary-text span"> Rs. 1200.00</span></h3>
-                                <p>Breakfast</p>
-                            </div>
-                        </div>
-                        <div class="menu-item">
-                            <img src="images/food5.png" alt="Coconut Sambol">
-                            <div>
-                                <h3>Coconut Sambol <span class=" primary-text span"> Rs. 150.00</span></h3>
-                                <p>Breakfast</p>
-                            </div>
-                        </div>
-                        <div class="menu-item">
-                            <img src="images/food6.png" alt="Fish Ambul Thiyal">
-                            <div>
-                                <h3>Fish Ambul Thiyal<span class=" primary-text span"> Rs. 900.00</span></h3>
-                                <p>Lunch.</p>
-                            </div>
-                        </div>
+                    <div class="menu-item-left" id="menu-item-left">
+                        <%-- Left menu items --%>
                     </div>
 
-                    <div class="menu-item-right">
-                        <div class="menu-item">
-                            <img src="images/food7.jpeg" alt="Sri Lankan Crab Curry">
-                            <div>
-                                <h3>Sri Lankan Crab Curry<span class=" primary-text span"> Rs. 2200.00</span></h3>
-                                <p>Dinner</p>
-                            </div>
-                        </div>
-
-                        <div class="menu-item">
-                            <img src="images/food8.jpeg" alt="Kiribath (Milk Rice)">
-                            <div>
-                                <h3>Kiribath (Milk Rice)<span class=" primary-text span"> Rs. 400.00</span></h3>
-                                <p>Breakfast.</p>
-                            </div>
-                        </div>
-                        <div class="menu-item">
-                            <img src="images/food9.jpeg" alt="Watalappan">
-                            <div>
-                                <h3>Watalappan<span class=" primary-text span"> Rs. 350.00</span></h3>
-                                <p>Breakfast</p>
-                            </div>
-                        </div>
-                        <div class="menu-item">
-                            <img src="images/food10.jpeg" alt="Egg Hoppers">
-                            <div>
-                                <h3>Egg Hoppers<span class=" primary-text span"> Rs. 250.00</span></h3>
-                                <p>Dinner</p>
-                            </div>
-                        </div>
-                        <div class="menu-item">
-                            <img src="images/food11.jpeg" alt="String Hoppers">
-                            <div>
-                                <h3>String Hoppers<span class=" primary-text span"> Rs. 300.00</span></h3>
-                                <p>Dinner</p>
-                            </div>
-                        </div>
-                        <div class="menu-item">
-                            <img src="images/food12.jpeg" alt="Devilled Chicken">
-                            <div>
-                                <h3>Devilled Chicken<span class=" primary-text span"> Rs. 750.00</span></h3>
-                                <p>Lunch</p>
-                            </div>
-                        </div>
+                    <div class="menu-item-right" id="menu-item-right">
+                        <%-- Right menu items --%>
                     </div>
                 </div>
                 <a href="order.jsp" class="btn" style="width: 10%; margin-bottom: 20px;">Order Now</a>
@@ -408,32 +324,12 @@
                 <button class="btn-submit" onclick="submitReview()">Submit Review</button>
             </div>
 
-            <div id="review-list">
+            <div>
                 <h2 style="color: #f7b831; margin-bottom: 10px;">Recent Reviews</h2>
-                <ul class="review-list">
+                <ul class="review-list" id="review-list">
                     <!-- Reviews will be populated here js function is below -->
                 </ul>
             </div>
-
-            <ul class="review-list">
-                <!-- Example review items  Remove this because these added using js line 656-->
-                <li class="review-item">
-                    <div class="review-header">
-                        <span class="reviewer-name">John Doe</span>
-                        <span class="review-date">2024-09-04</span>
-                        <div class="review-rating">★★★★★</div>
-                    </div>
-                    <p class="review-content">The food was amazing, and the service was excellent. Highly recommend!</p>
-                </li>
-                <li class="review-item">
-                    <div class="review-header">
-                        <span class="reviewer-name">Jane Smith</span>
-                        <span class="review-date">2024-09-03</span>
-                        <div class="review-rating">★★★★☆</div>
-                    </div>
-                    <p class="review-content">Great ambiance and delicious dishes, but the wait time was a bit long.</p>
-                </li>
-            </ul>
         </div>
 
         <!-- dayTIME-Start -->
@@ -601,59 +497,164 @@
             stars.forEach(star => {
                 star.addEventListener('change', (event) => {
                     const rating = event.target.value;
-                    selectedRatingText.textContent = `Selected Rating: ${rating} ${'⭐'.repeat(rating)}`;
+                    selectedRatingText.textContent = 'Selected Rating: ' + rating + ' ' + '⭐'.repeat(rating);
                 });
             });
         });
 
         document.addEventListener('DOMContentLoaded', function() {
             // Load existing reviews from the database
+            loadMenuItems();
             loadReviews();
         });
 
-        function submitReview(event) {
-            event.preventDefault();
+        function submitReview() {
+            var name = document.getElementById("input-name").value;
+            var starCount = document.querySelector('#rating-stars input[name="rating"]:checked').value;
+            var comment = document.getElementById("input-review").value;
 
-            const formData = new FormData(document.getElementById('review-form'));
+            var reviewJson = JSON.stringify({
+                "starCount": starCount,
+                "comment": comment,
+                "name": name
+            });
 
-            fetch('', {
-                method: 'POST',
-                body: formData,
-            })
-                .then(response => response.text())
-                .then(data => {
-                    alert('Review submitted successfully!');
-                    document.getElementById('review-form').reset();
-                    loadReviews(); // Reload reviews after submission
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
+            var ajax = new XMLHttpRequest();
+            ajax.onreadystatechange = function () {
+                if(ajax.readyState === 4) {
+                    if(ajax.status===200) {
+                        alert("Review submitted successfully!");
+                        loadReviews();
+                    } else {
+                        alert(ajax.responseText);
+                    }
+                }
+            };
+            ajax.open("POST", "/review/add", true);
+            ajax.setRequestHeader("Content-Type", "application/json");
+            ajax.send(reviewJson);
         }
 
         function loadReviews() {
-            fetch('')
-                .then(response => response.json())
-                .then(data => {
-                    const reviewList = document.querySelector('.review-list');
-                    reviewList.innerHTML = '';
-                    data.forEach(review => {
-                        const li = document.createElement('li');
-                        li.className = 'review-item';
-                        li.innerHTML = `
-                                <div class="review-header">
-                                    <span class="reviewer-name">${review.name}</span>
-                                    <span class="review-date">${review.date}</span>
-                                    <span class="review-rating">${'★'.repeat(review.rating)}</span>
-                                </div>
-                                <p class="review-content">${review.content}</p>
-                            `;
-                        reviewList.appendChild(li);
-                    });
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
+            var ajax = new XMLHttpRequest();
+
+            ajax.onreadystatechange = function () {
+                if(ajax.readyState === 4) {
+                    if(ajax.status===200) {
+                        var reviews = JSON.parse(ajax.responseText);
+
+                        const reviewList = document.getElementById('review-list');
+                        reviewList.innerHTML = '';
+                        reviews.forEach(review => {
+                            const li = document.createElement('li');
+                            li.className = 'review-item';
+
+                            const reviewHeader = document.createElement('div');
+                            reviewHeader.className = 'review-header';
+
+                            const reviewerName = document.createElement('span');
+                            reviewerName.className = 'reviewer-name';
+                            reviewerName.textContent = review.name;
+
+                            const reviewDate = document.createElement('span');
+                            reviewDate.className = 'review-date';
+                            reviewDate.textContent = review.datetime;
+
+                            const reviewRating = document.createElement('span');
+                            reviewRating.className = 'review-rating';
+                            reviewRating.textContent = '★'.repeat(review.starCount);
+
+                            const reviewContent = document.createElement('p');
+                            reviewContent.className = 'review-content';
+                            reviewContent.textContent = review.comment;
+
+                            // Append elements to the header
+                            reviewHeader.appendChild(reviewerName);
+                            reviewHeader.appendChild(reviewDate);
+                            reviewHeader.appendChild(reviewRating);
+
+                            // Append header and content to the list item
+                            li.appendChild(reviewHeader);
+                            li.appendChild(reviewContent);
+
+                            reviewList.appendChild(li);
+                        });
+                    }
+                }
+            };
+            ajax.open("GET", "/review/all", true);
+            ajax.send();
+        }
+
+        const menuItems = [];
+
+        function loadMenuItems() {
+            var ajax = new XMLHttpRequest();
+
+            ajax.onreadystatechange = function () {
+                if(ajax.readyState === 4) {
+                    if(ajax.status===200) {
+                        var foodArray = JSON.parse(ajax.responseText);
+                        menuItems.length = 0;
+                        foodArray.forEach((item) => {
+                            menuItems.push({
+                                name: item.name,
+                                price: item.price,
+                                image: 'images/foodItems/' + item.imagePath,
+                                category: item.categoryName
+                            });
+                        });
+                        renderMenuItems();
+                    }
+                }
+            };
+            ajax.open("GET", "/food/all?isActive=" + encodeURIComponent(false), true);
+            ajax.send();
+        }
+
+        function renderMenuItems() {
+            const menuLeft = document.getElementById('menu-item-left');
+            const menuRight = document.getElementById('menu-item-right');
+
+            menuLeft.innerHTML = '';
+            menuRight.innerHTML = '';
+
+            var nextItemSide = -1;
+
+            menuItems.forEach(item => {
+                const menuItem = document.createElement('div');
+                menuItem.className = 'menu-item';
+
+                const img = document.createElement('img');
+                img.src = item.image;
+                img.alt = item.name;
+                menuItem.appendChild(img);
+
+                const name = document.createElement('h3');
+                name.textContent = item.name + " ";
+
+                const price = document.createElement("span");
+                price.classList.add("primary-text", "span");
+                price.textContent = " Rs. " + item.price;
+                name.appendChild(price);
+
+                const category = document.createElement('p');
+                category.textContent = item.category;
+                menuItem.appendChild(category);
+
+                const dataWrapper = document.createElement("div");
+                dataWrapper.appendChild(name);
+                dataWrapper.appendChild(category);
+                menuItem.appendChild(dataWrapper);
+
+                if (nextItemSide === -1) {
+                    menuLeft.appendChild(menuItem);
+                    nextItemSide = 1;
+                } else if (nextItemSide === 1) {
+                    menuRight.appendChild(menuItem);
+                    nextItemSide = -1;
+                }
+            });
         }
     </script>
     <script src="js/script.js"></script>
